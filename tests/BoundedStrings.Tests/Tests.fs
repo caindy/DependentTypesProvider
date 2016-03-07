@@ -59,3 +59,9 @@ let ``factory method returns None when violating upper or lower bound`` () =
   Assert.IsTrue(s1.IsNone)
   let s2 = B2.TryCreate(mkStr 21us) // too long
   Assert.IsTrue(s2.IsNone)
+
+type Priv = private P of FixedLengthString<Length=len>
+[<Test>]
+let ``private DUs should work with these`` () =
+  let s = P(mkStr len) |> string
+  Assert.IsNotNull(s)

@@ -1,38 +1,30 @@
-[![Issue Stats](http://issuestats.com/github/fsprojects/ProjectScaffold/badge/issue)](http://issuestats.com/github/fsprojects/ProjectScaffold)
-[![Issue Stats](http://issuestats.com/github/fsprojects/ProjectScaffold/badge/pr)](http://issuestats.com/github/fsprojects/ProjectScaffold)
+# Dependent Types Provider for Domain-driven Development in F#
 
-# ProjectScaffold
+The goal of this project is to allow certain primitive types to be contrained
+according to rules for your domain. Loosely defined this means dependent types
+for certain primitives (string, number types).
 
-This project can be used to scaffold a prototypical .NET solution including file system layout and tooling. This includes a build process that: 
+Some code:
 
-* updates all AssemblyInfo files
-* compiles the application and runs all test projects
-* generates [SourceLinks](https://github.com/ctaggart/SourceLink)
-* generates API docs based on XML document tags
-* generates [documentation based on Markdown files](http://fsprojects.github.io/ProjectScaffold/writing-docs.html)
-* generates [NuGet](http://www.nuget.org) packages
-* and allows a simple [one step release process](http://fsprojects.github.io/ProjectScaffold/release-process.html).
+```fsharp
+// fixed length strings
+type EAN = FixedLengthString<Length=13us>
+// constructor will throw for the wrong length
+let ean = EAN("978-1430267676")
 
-In order to start the scaffolding process run 
+// bounded strings
+type ProductDescription = BoundedString<Lower=1us, Upper=2000us>
+// factory methods available for all types
+ProductDescription.TryCreate("").IsNone // true
 
-    > build.cmd // on windows    
-    $ ./build.sh  // on unix
-    
-Read the [Getting started tutorial](http://fsprojects.github.io/ProjectScaffold/index.html#Getting-started) to learn more.
+// These are actually System.String!
+let (s  : string) = upcast ean // compiles with warning ("String has no proper subtypes")
+let (s' : string) = string ean // just ean
+```
+The constructor and factory method are both here because sometimes you trust
+your inputs and sometimes you don't.
 
-Documentation: http://fsprojects.github.io/ProjectScaffold
+That's all for now. Here's the plan thus far:
 
-
-## Build Status
-
-Mono | .NET
----- | ----
-[![Mono CI Build Status](https://img.shields.io/travis/fsprojects/ProjectScaffold/master.svg)](https://travis-ci.org/fsprojects/ProjectScaffold) | [![.NET Build Status](https://img.shields.io/appveyor/ci/fsgit/ProjectScaffold/master.svg)](https://ci.appveyor.com/project/fsgit/projectscaffold)
-
-## Maintainer(s)
-
-- [@forki](https://github.com/forki)
-- [@pblasucci](https://github.com/pblasucci)
-- [@sergey-tihon](https://github.com/sergey-tihon)
-
-The default maintainer account for projects under "fsprojects" is [@fsprojectsgit](https://github.com/fsprojectsgit) - F# Community Project Incubation Space (repo management)
+[ ] `PatternString` accepting RegEx string type parameter
+[ ] Constrained number types, e.g. `ConstrainedByte`, `ConstrainedInt`, `ConstrainedFloat`, etc.
