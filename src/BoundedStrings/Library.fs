@@ -61,9 +61,21 @@ type DependentTypesProvider (cfg) as tp =
       elif s'.Length < (int lower) then failwithf "%s is shorter than %d" s' lower
       else s'
       @@>
-    let ctor       = new ProvidedConstructor([param], InvokeCode = constrain)
-    let boundedStr = new ProvidedTypeDefinition(asm, ns, tyName, Some typeof<string>)
+    let ctor          = new ProvidedConstructor([param], InvokeCode = constrain)
+    let boundedStr    = new ProvidedTypeDefinition(asm, ns, tyName, Some typeof<string>)
+    let boundedStrOpt = typedefof<_ option>.MakeGenericType(boundedStr)
+    let factory       = new ProvidedMethod("TryCreate", [param], boundedStrOpt, IsStaticMethod = true)
+    factory.InvokeCode <-
+      fun (v :: []) ->
+        <@@
+        let  s' = (%%Expr.Coerce(v, typeof<string>) : string)
+        if   s'.Length > (int upper) then None
+        elif s'.Length < (int lower) then None
+        else Some s'
+        @@>
+
     boundedStr.AddMember(ctor)
+    boundedStr.AddMember(factory)
     boundedStr
 
   do
