@@ -5,24 +5,34 @@ open DDDUtils
 open DDDUtils.DependentTypes
 open NUnit.Framework
 
-type F = FixedLengthString<Length=5us>
+[<Literal>] let len = 5us
+type F = FixedLengthString<Length=len>
+type B = BoundedString<Lower=1us, Upper=len>
+
+open System
+let mkStr n = new String([| for i in 1..(int n) do yield 's' |])
+let alterLength s = s + "s"
 
 [<Test>]
-let ``string should fit`` () =
-  let s = F("test")
-  printfn "%A" s
+let ``right length should fit in fixed length string`` () =
+  let s = F(mkStr len)
   Assert.IsNotNullOrEmpty(s :> string)
 
 [<Test>]
-let ``string shouldn't fit`` () =
-  Assert.Throws(fun () -> F("testing!!!!!!") |> ignore)
+let ``wrong length string shouldn't fit`` () =
+  Assert.Throws(fun () -> F(mkStr len |> alterLength) |> string |> printfn "%s")
   |> Assert.IsNotNull
 
 [<Test>]
-let ``should be able to create option`` () =
-  let (Some f) = F.TryCreate("test")
+let ``factory method should work for right length`` () =
+  let (Some f) = F.TryCreate(mkStr len)
   Assert.IsNotNullOrEmpty(upcast f)
 
 [<Test>]
-let ``too long should be None`` () =
-  Assert.IsTrue(F.TryCreate("test!!!!!!").IsNone)
+let ``factory method should return None for wrong length`` () =
+  Assert.IsTrue(F.TryCreate(mkStr len |> alterLength).IsNone)
+
+[<Test>]
+let ``smaller equal to upper bound should fit`` () =
+  let s = B(mkStr len)
+  Assert.IsNotNullOrEmpty(s :> string)

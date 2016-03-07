@@ -9,26 +9,25 @@ open FSharp.Quotations
 [<TypeProvider>]
 type DependentTypesProvider (cfg) as tp =
   inherit TypeProviderForNamespaces ()
-  let ns = "DDDUtils.DependentTypes"
-  let asm = Assembly.GetExecutingAssembly()
-  let strLen = new ProvidedStaticParameter("Length", typeof<uint16>)
-  let container = new ProvidedTypeDefinition(asm, ns, "FixedLengthString", Some typeof<obj>)
+  let ns        = "DDDUtils.DependentTypes"
+  let asm       = Assembly.GetExecutingAssembly()
+  let fixedLenStr = new ProvidedTypeDefinition(asm, ns, "FixedLengthString", Some typeof<obj>)
 
+  let strLen    = new ProvidedStaticParameter("Length", typeof<uint16>)
   let (|Length|) (args : obj array) =
     match args with
     | [| (:? uint16 as l) |] -> l
     |                      a -> failwithf "Expected singleton array of uint16 but got %A" a
 
-  let create (tyName : string) (Length l) =
+  let createFixed (tyName : string) (Length l) =
     let param = new ProvidedParameter("value", typeof<string>)
     let constrain (exprs : Expr list) =
       let v = exprs |> List.head
       <@@
-        let s' = (%%Expr.Coerce(v, typeof<string>) : string)
-        if s'.Length > (int 5) then failwithf "%s is longer than %d" s' l
-        else
-        s'
-       @@>
+      let s' = (%%Expr.Coerce(v, typeof<string>) : string)
+      if s'.Length > (int l) then failwithf "%s is longer than %d" s' l
+      else s'
+      @@>
     let ctor        = new ProvidedConstructor([param], InvokeCode = constrain)
     let fixedStr    = new ProvidedTypeDefinition(asm, ns, tyName, Some typeof<string>)
     let fixedStrOpt = typedefof<_ option>.MakeGenericType(fixedStr)
@@ -44,9 +43,33 @@ type DependentTypesProvider (cfg) as tp =
     fixedStr.AddMember(factory)
     fixedStr
 
+  let upperBound = new ProvidedStaticParameter("Upper", typeof<uint16>)
+  let lowerBound = new ProvidedStaticParameter("Lower", typeof<uint16>, parameterDefaultValue = 0us)
+  let (|Bounds|) (args : obj array) =
+    match args with
+    | [| (:? uint16 as lower); (:? uint16 as upper) |] when lower < upper -> lower, upper
+    |                      a -> failwithf "Expected singleton array of uint16 but got %A" a
+
+  let boundedStr = new ProvidedTypeDefinition(asm, ns, "BoundedString", Some typeof<obj>)
+  let createBounded (tyName : string) (Bounds (lower, upper)) =
+    let param = new ProvidedParameter("value", typeof<string>)
+    let constrain (exprs : Expr list) =
+      let v = exprs |> List.head
+      <@@
+      let s' = (%%Expr.Coerce(v, typeof<string>) : string)
+      if s'.Length > (int upper) then failwithf "%s is longer than %d" s' upper
+      elif s'.Length < (int lower) then failwithf "%s is shorter than %d" s' lower
+      else s'
+      @@>
+    let ctor       = new ProvidedConstructor([param], InvokeCode = constrain)
+    let boundedStr = new ProvidedTypeDefinition(asm, ns, tyName, Some typeof<string>)
+    boundedStr.AddMember(ctor)
+    boundedStr
+
   do
-    container.DefineStaticParameters([strLen], create)
-    tp.AddNamespace(ns, [container])
+    fixedLenStr.DefineStaticParameters([strLen], createFixed)
+    boundedStr.DefineStaticParameters([lowerBound; upperBound], createBounded)
+    tp.AddNamespace(ns, [fixedLenStr; boundedStr])
 
 [<assembly:TypeProviderAssembly>]
 do ()
