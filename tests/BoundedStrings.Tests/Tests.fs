@@ -21,7 +21,7 @@ let ``right length should fit in fixed length string`` () =
 [<Test>]
 let ``wrong length string shouldn't fit`` () =
   Assert.Throws(fun () -> F(mkStr len |> alterLength) |> string |> printfn "%s")
-  |> Assert.IsNotNull
+  |> printfn "%A"
 
 [<Test>]
 let ``factory method should work for right length`` () =
@@ -36,3 +36,9 @@ let ``factory method should return None for wrong length`` () =
 let ``smaller equal to upper bound should fit`` () =
   let s = B(mkStr len)
   Assert.IsNotNullOrEmpty(s :> string)
+
+[<Test>]
+let ``string longer than upper bound shouldn't fit`` () =
+  Assert.Throws(fun () -> B(mkStr len |> alterLength) |> string |> printfn "%s")
+  |> printfn "%A"
+

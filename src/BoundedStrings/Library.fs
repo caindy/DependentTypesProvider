@@ -56,8 +56,8 @@ type DependentTypesProvider (cfg) as tp =
     let constrain (exprs : Expr list) =
       let v = exprs |> List.head
       <@@
-      let s' = (%%Expr.Coerce(v, typeof<string>) : string)
-      if s'.Length > (int upper) then failwithf "%s is longer than %d" s' upper
+      let  s' = (%%Expr.Coerce(v, typeof<string>) : string)
+      if   s'.Length > (int upper) then failwithf "%s is longer than %d"  s' upper
       elif s'.Length < (int lower) then failwithf "%s is shorter than %d" s' lower
       else s'
       @@>
@@ -67,8 +67,8 @@ type DependentTypesProvider (cfg) as tp =
     boundedStr
 
   do
-    fixedLenStr.DefineStaticParameters([strLen], createFixed)
-    boundedStr.DefineStaticParameters([lowerBound; upperBound], createBounded)
+    fixedLenStr.DefineStaticParameters([strLen],                 createFixed)
+    boundedStr .DefineStaticParameters([lowerBound; upperBound], createBounded)
     tp.AddNamespace(ns, [fixedLenStr; boundedStr])
 
 [<assembly:TypeProviderAssembly>]
