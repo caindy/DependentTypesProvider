@@ -29,12 +29,27 @@ your inputs and sometimes you don't. Ideally using this approach wouldn't incur
 much more overhead than using a single-case discriminated union (or less). I
 haven't tested C# interop. This is pre-alpha code.
 
+## Request for Feedback
+
+There's already some
+[good guidance](http://fsharpforfunandprofit.com/posts/designing-with-types-more-semantic-types/)
+in the community on dealing with constrained strings as semantically richer
+types, but I think this approach is lighter weight.
+
+
 # Roadmap
 That's all for now. Here's the plan thus far:
 
 [ ] `PatternString` accepting RegEx string type parameter
 
+[ ] Instance member `.Str` that does `upcast` ???
+
 [ ] Constrained number types, e.g. `ConstrainedByte`, `ConstrainedInt`, `ConstrainedFloat`, etc.
 
+[ ] NuGet love
+
+[ ] Cross-targetting
+
+[ ] C# Interop tests
 
 Copyright 2016 Christopher Atkins

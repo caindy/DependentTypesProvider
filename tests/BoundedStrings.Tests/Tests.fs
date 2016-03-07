@@ -21,7 +21,7 @@ let ``right length should fit in fixed length string`` () =
 [<Test>]
 let ``wrong length string shouldn't fit`` () =
   Assert.Throws(fun () -> F(mkStr len |> alterLength) |> string |> printfn "%s")
-  |> printfn "%A"
+  |> ignore
 
 [<Test>]
 let ``factory method should work for right length`` () =
@@ -41,7 +41,7 @@ let ``smaller equal to upper bound should fit`` () =
 [<Test>]
 let ``string longer than upper bound shouldn't fit`` () =
   Assert.Throws(fun () -> B(mkStr len |> alterLength) |> string |> printfn "%s")
-  |> printfn "%A"
+  |> ignore
 
 [<Test>]
 let ``factory method should return Some for correct length`` () =
@@ -51,7 +51,7 @@ type B2 = BoundedString<Lower=10us, Upper=20us>
 [<Test>]
 let ``smaller than lower bound should fail`` () =
   Assert.Throws(fun () -> B2(mkStr 9us) |> string |> printfn "%s")
-  |> printfn "%A"
+  |> ignore
 
 [<Test>]
 let ``factory method returns None when violating upper or lower bound`` () =
@@ -60,8 +60,11 @@ let ``factory method returns None when violating upper or lower bound`` () =
   let s2 = B2.TryCreate(mkStr 21us) // too long
   Assert.IsTrue(s2.IsNone)
 
-type Priv = private P of FixedLengthString<Length=len>
+type private Str5 = FixedLengthString<Length=5us>
+type Foo = private Bar of Str5
+  with member x.Str () : string = let (Bar s) = x in upcast s
+
 [<Test>]
 let ``private DUs should work with these`` () =
-  let s = P(mkStr len) |> string
-  Assert.IsNotNull(s)
+  let s = Bar (Str5(mkStr 5us))
+  Assert.IsNotNull(s.Str ())
