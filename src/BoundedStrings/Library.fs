@@ -7,7 +7,7 @@ open ProviderImplementation.ProvidedTypes
 open FSharp.Quotations
 
 [<TypeProvider>]
-type DependentTypesProvider (cfg) as tp =
+type DependentTypesProvider (_cfg) as tp = // TODO implement cross compiling
   inherit TypeProviderForNamespaces ()
   let ns        = "DDDUtils.DependentTypes"
   let asm       = Assembly.GetExecutingAssembly()
@@ -33,11 +33,12 @@ type DependentTypesProvider (cfg) as tp =
     let fixedStrOpt = typedefof<_ option>.MakeGenericType(fixedStr)
     let factory     = new ProvidedMethod("TryCreate", [param], fixedStrOpt, IsStaticMethod = true)
     factory.InvokeCode <-
-      fun (v :: []) ->
-          <@@
-          let s' = (%%Expr.Coerce(v, typeof<string>) : string)
-          if s'.Length > (int l) then None
-          else Some s' @@>
+      fun exprs ->
+      let v = exprs |> List.head
+      <@@
+      let s' = (%%Expr.Coerce(v, typeof<string>) : string)
+      if s'.Length > (int l) then None
+      else Some s' @@>
 
     fixedStr.AddMember(ctor)
     fixedStr.AddMember(factory)
@@ -66,13 +67,14 @@ type DependentTypesProvider (cfg) as tp =
     let boundedStrOpt = typedefof<_ option>.MakeGenericType(boundedStr)
     let factory       = new ProvidedMethod("TryCreate", [param], boundedStrOpt, IsStaticMethod = true)
     factory.InvokeCode <-
-      fun (v :: []) ->
-        <@@
-        let  s' = (%%Expr.Coerce(v, typeof<string>) : string)
-        if   s'.Length > (int upper) then None
-        elif s'.Length < (int lower) then None
-        else Some s'
-        @@>
+      fun exprs ->
+      let v = exprs |> List.head
+      <@@
+      let  s' = (%%Expr.Coerce(v, typeof<string>) : string)
+      if   s'.Length > (int upper) then None
+      elif s'.Length < (int lower) then None
+      else Some s'
+      @@>
 
     boundedStr.AddMember(ctor)
     boundedStr.AddMember(factory)
