@@ -1,4 +1,4 @@
-namespace DDDUtils
+namespace FSharp.DependentTyping
 
 open System.Reflection
 open FSharp.Core.CompilerServices
@@ -9,7 +9,7 @@ open FSharp.Quotations
 [<TypeProvider>]
 type DependentTypesProvider (_cfg) as tp = // TODO implement cross compiling
   inherit TypeProviderForNamespaces ()
-  let ns        = "DDDUtils.DependentTypes"
+  let ns        = "FSharp.DependentTypes"
   let asm       = Assembly.GetExecutingAssembly()
   let fixedLenStr = new ProvidedTypeDefinition(asm, ns, "FixedLengthString", Some typeof<obj>)
 

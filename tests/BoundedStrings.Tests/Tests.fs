@@ -1,7 +1,7 @@
 module BoundedStrings.Tests
+#nowarn "59"
 
-open DDDUtils
-open DDDUtils.DependentTypes
+open FSharp.DependentTypes
 open NUnit.Framework
 
 [<Literal>]
@@ -15,18 +15,18 @@ let alterLength s = s + "s"
 
 [<Test>]
 let ``right length should fit in fixed length string`` () =
-  let s = F(mkStr len) |> string
-  Assert.IsNotNullOrEmpty(s)
+  let s = F(mkStr len)
+  Assert.IsNotNullOrEmpty(upcast s)
 
 [<Test>]
 let ``wrong length string shouldn't fit`` () =
-  Assert.Throws(fun () -> F(mkStr len |> alterLength) |> string |> printfn "%s")
+  Assert.Throws(fun () -> printfn "%s" <| upcast F(mkStr len |> alterLength))
   |> ignore
 
 [<Test>]
 let ``factory method should work for right length`` () =
   match F.TryCreate(mkStr len) with
-  | Some f -> Assert.IsNotNullOrEmpty(string f)
+  | Some f -> Assert.IsNotNullOrEmpty(upcast f)
   | _ -> Assert.Fail()
 
 [<Test>]
@@ -35,12 +35,12 @@ let ``factory method should return None for wrong length`` () =
 
 [<Test>]
 let ``smaller equal to upper bound should fit`` () =
-  let s = B(mkStr len) |> string
-  Assert.IsNotNullOrEmpty(s)
+  let s = B(mkStr len)
+  Assert.IsNotNullOrEmpty(upcast s)
 
 [<Test>]
 let ``string longer than upper bound shouldn't fit`` () =
-  Assert.Throws(fun () -> B(mkStr len |> alterLength) |> string |> printfn "%s")
+  Assert.Throws(fun () -> printfn "%s" <| upcast B(mkStr len |> alterLength) )
   |> ignore
 
 [<Test>]
@@ -50,7 +50,7 @@ let ``factory method should return Some for correct length`` () =
 type B2 = BoundedString<Lower=10us, Upper=20us>
 [<Test>]
 let ``smaller than lower bound should fail`` () =
-  Assert.Throws(fun () -> B2(mkStr 9us) |> string |> printfn "%s")
+  Assert.Throws(fun () -> printfn "%s" <| upcast B2(mkStr 9us))
   |> ignore
 
 [<Test>]
@@ -62,9 +62,9 @@ let ``factory method returns None when violating upper or lower bound`` () =
 
 type private Str5 = FixedLengthString<Length=5us>
 type Foo = private Bar of Str5
-  with member x.Str () : string = let (Bar s) = x in upcast s
+  with override x.ToString () : string = let (Bar s) = x in upcast s
 
 [<Test>]
 let ``private DUs should work with these`` () =
   let s = Bar (Str5(mkStr 5us))
-  Assert.IsNotNull(s.Str ())
+  Assert.IsNotNull(s.ToString())
