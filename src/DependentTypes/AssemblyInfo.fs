@@ -1,7 +1,7 @@
 ﻿namespace System
 open System.Reflection
 
-[<assembly: AssemblyTitleAttribute("BoundedStrings")>]
+[<assembly: AssemblyTitleAttribute("DependentTypes")>]
 [<assembly: AssemblyProductAttribute("BoundedStrings")>]
 [<assembly: AssemblyDescriptionAttribute("type provider for bounded strings")>]
 [<assembly: AssemblyVersionAttribute("1.0")>]
