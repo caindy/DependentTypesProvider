@@ -9,7 +9,7 @@ open NUnit.Framework
 [<Literal>]
 let len = 5
 
-type F = FixedLengthString<Length=len>
+type F = BoundedString<Lower=len, Upper=len>
 type B = BoundedString<Lower=1, Upper=len>
 
 let mkStr n = new System.String([| for i in 1..(int n) do yield 's' |])
@@ -17,7 +17,6 @@ let alterLength s = s + "s"
 
 [<Test>]
 let ``null strings should fail`` () =
-  Assert.Throws<ArgumentNullException>(fun () -> printfn "%s" <| upcast F(null)) |> ignore
   Assert.Throws<ArgumentNullException>(fun () -> printfn "%s" <| upcast B(null)) |> ignore
 
 [<Test>]
@@ -61,8 +60,6 @@ let ``factory method should return Some for correct length`` () =
 let ``factory method should fail for null`` () =
   let b = B.TryCreate(null)
   Assert.IsTrue(b.IsNone)
-  let f = F.TryCreate(null)
-  Assert.IsTrue(f.IsNone)
 
 type B2 = BoundedString<Lower=10, Upper=20>
 [<Test>]
@@ -78,7 +75,7 @@ let ``factory method returns None when violating upper or lower bound`` () =
   Assert.IsTrue(s2.IsNone)
 
 
-type private Str5 = FixedLengthString<Length=5>
+type private Str5 = BoundedString<Lower=5,Upper=5>
 type Foo = private Bar of Str5
   with override x.ToString () : string = let (Bar s) = x in upcast s
 
