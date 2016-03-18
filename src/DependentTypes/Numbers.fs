@@ -44,6 +44,11 @@ type Numbers (_cfg) as tp =
       @@>
     boundedInt.AddMember(ctor)
     boundedInt.AddMember(factory)
+
+    let upperBoundGetter = new ProvidedProperty("MaxValue", typeof<int>, IsStatic =  true, GetterCode = (fun _ -> <@@ upper @@>))
+    let lowerBoundGetter = new ProvidedProperty("MinValue", typeof<int>, IsStatic =  true, GetterCode = (fun _ -> <@@ lower @@>))
+    boundedInt.AddMember(upperBoundGetter)
+    boundedInt.AddMember(lowerBoundGetter)
     boundedInt
 
   do
