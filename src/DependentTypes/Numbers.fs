@@ -9,7 +9,7 @@ open FSharp.Quotations
 
 [<AutoOpen>]
 module Bounds =
-  let inline createBounded< ^n when ^n : comparison> asm ns (tyName : string) (bounds : obj array) =
+  let inline createdBoundedNum< ^n when ^n : comparison> asm ns (tyName : string) (bounds : obj array) =
     let lower = (bounds.[0] : obj) :?> ^n
     let upper = (bounds.[1] : obj) :?> ^n
     if lower > upper then failwithf "Lower %A must be less than upper %A" lower upper
@@ -25,9 +25,9 @@ module Bounds =
       else i
       @@>
     let ctor          = new ProvidedConstructor([param], InvokeCode = constrain)
-    let boundedInt    = new ProvidedTypeDefinition(asm, ns, tyName, Some numType)
-    let boundedIntOpt = typedefof<_ option>.MakeGenericType(boundedInt)
-    let factory       = new ProvidedMethod("TryCreate", [param], boundedIntOpt, IsStaticMethod = true)
+    let boundedNum    = new ProvidedTypeDefinition(asm, ns, tyName, Some numType)
+    let boundedNumOpt = typedefof<_ option>.MakeGenericType(boundedNum)
+    let factory       = new ProvidedMethod("TryCreate", [param], boundedNumOpt, IsStaticMethod = true)
     factory.InvokeCode <-
       fun exprs ->
       let v = exprs |> List.head
@@ -37,24 +37,28 @@ module Bounds =
       elif i < lower then None
       else Some i
       @@>
-    boundedInt.AddMember(ctor)
-    boundedInt.AddMember(factory)
+    boundedNum.AddMember(ctor)
+    boundedNum.AddMember(factory)
 
     let upperBoundGetter = new ProvidedProperty("MaxValue", numType, IsStatic = true, GetterCode = (fun _ -> <@@ upper @@>))
     let lowerBoundGetter = new ProvidedProperty("MinValue", numType, IsStatic = true, GetterCode = (fun _ -> <@@ lower @@>))
-    boundedInt.AddMember(upperBoundGetter)
-    boundedInt.AddMember(lowerBoundGetter)
-    boundedInt
+    boundedNum.AddMember(upperBoundGetter)
+    boundedNum.AddMember(lowerBoundGetter)
+    boundedNum
+
+  let upperBoundParam<'t> ()              = new ProvidedStaticParameter("Upper", typeof<'t>)
+  let lowerBoundParam<'t> (v : 't option) = new ProvidedStaticParameter("Lower", typeof<'t>,
+                                                                        parameterDefaultValue = defaultArg v (Unchecked.defaultof<'t>))
 
 [<TypeProvider>]
 type Numbers (_cfg) as tp =
   inherit TypeProviderForNamespaces ()
-  let ns         = "FSharp.DependentTypes.Numbers"
-  let asm        = Assembly.GetExecutingAssembly()
-  let boundedInt = new ProvidedTypeDefinition(asm, ns, "BoundedInt32", Some typeof<obj>)
-  let upperBound = new ProvidedStaticParameter("Upper", typeof<int>)
-  let lowerBound = new ProvidedStaticParameter("Lower", typeof<int>, parameterDefaultValue = 0us)
-  do
-    boundedInt.DefineStaticParameters([lowerBound; upperBound], (createBounded<int> asm ns))
-    tp.AddNamespace(ns, [boundedInt])
+  let ns          = "FSharp.DependentTypes.Numbers"
+  let asm         = Assembly.GetExecutingAssembly()
+  let boundedInt  = new ProvidedTypeDefinition(asm, ns, "BoundedInt32",  Some typeof<obj>)
+  let boundedUInt = new ProvidedTypeDefinition(asm, ns, "BoundedUInt32", Some typeof<obj>)
 
+  do
+    boundedInt .DefineStaticParameters([lowerBoundParam<int>    None; upperBoundParam<int>    ()], (createdBoundedNum<int>    asm ns))
+    boundedUInt.DefineStaticParameters([lowerBoundParam<uint32> None; upperBoundParam<uint32> ()], (createdBoundedNum<uint32> asm ns))
+    tp.AddNamespace(ns, [boundedInt; boundedUInt])

@@ -1,5 +1,6 @@
 namespace FSharp.DependentTyping
 
+open System
 open System.Reflection
 open FSharp.Core.CompilerServices
 open ProviderImplementation
@@ -13,11 +14,11 @@ type Strings (_cfg) as tp = // TODO implement cross compiling
   let asm       = Assembly.GetExecutingAssembly()
   let fixedLenStr = new ProvidedTypeDefinition(asm, ns, "FixedLengthString", Some typeof<obj>)
 
-  let strLen    = new ProvidedStaticParameter("Length", typeof<uint16>)
+  let strLen    = new ProvidedStaticParameter("Length", typeof<int>)
   let (|Length|) (args : obj array) =
     match args with
-    | [| (:? uint16 as l) |] -> l
-    |                      a -> failwithf "Expected singleton array of uint16 but got %A" a
+    | [| (:? int as l) |] -> l
+    |                   a -> failwithf "Expected int length but got %A" a
 
   let createFixed (tyName : string) (Length l) =
     let param = new ProvidedParameter("value", typeof<string>)
@@ -25,7 +26,8 @@ type Strings (_cfg) as tp = // TODO implement cross compiling
       let v = exprs |> List.head
       <@@
       let s' = (%%Expr.Coerce(v, typeof<string>) : string)
-      if s'.Length > (int l) then failwithf "%s is longer than %d" s' l
+      if s' = null then raise <| ArgumentNullException("value", "value cannot be null")
+      elif s'.Length > (int l) then failwithf "%s is longer than %d" s' l
       else s'
       @@>
     let ctor        = new ProvidedConstructor([param], InvokeCode = constrain)
@@ -37,19 +39,20 @@ type Strings (_cfg) as tp = // TODO implement cross compiling
       let v = exprs |> List.head
       <@@
       let s' = (%%Expr.Coerce(v, typeof<string>) : string)
-      if s'.Length > (int l) then None
+      if s' = null then None
+      elif s'.Length > (int l) then None
       else Some s' @@>
 
     fixedStr.AddMember(ctor)
     fixedStr.AddMember(factory)
     fixedStr
 
-  let upperBound = new ProvidedStaticParameter("Upper", typeof<uint16>)
-  let lowerBound = new ProvidedStaticParameter("Lower", typeof<uint16>, parameterDefaultValue = 0us)
+  let upperBound = new ProvidedStaticParameter("Upper", typeof<int>)
+  let lowerBound = new ProvidedStaticParameter("Lower", typeof<int>, parameterDefaultValue = 1)
   let (|Bounds|) (args : obj array) =
     match args with
-    | [| (:? uint16 as lower); (:? uint16 as upper) |] when lower < upper -> lower, upper
-    |                      a -> failwithf "Expected singleton array of uint16 but got %A" a
+    | [| (:? int as lower); (:? int as upper) |] when lower < upper -> lower, upper
+    |                      a -> failwithf "int lower, int upper but got %A" a
 
   let boundedStr = new ProvidedTypeDefinition(asm, ns, "BoundedString", Some typeof<obj>)
   let createBounded (tyName : string) (Bounds (lower, upper)) =
@@ -58,6 +61,7 @@ type Strings (_cfg) as tp = // TODO implement cross compiling
       let v = exprs |> List.head
       <@@
       let  s' = (%%Expr.Coerce(v, typeof<string>) : string)
+      if s' = null then raise <| ArgumentNullException("value", "value cannot be null")
       if   s'.Length > (int upper) then failwithf "%s is longer than %d"  s' upper
       elif s'.Length < (int lower) then failwithf "%s is shorter than %d" s' lower
       else s'
@@ -70,8 +74,9 @@ type Strings (_cfg) as tp = // TODO implement cross compiling
       fun exprs ->
       let v = exprs |> List.head
       <@@
-      let  s' = (%%Expr.Coerce(v, typeof<string>) : string)
-      if   s'.Length > (int upper) then None
+      let s' = (%%Expr.Coerce(v, typeof<string>) : string)
+      if s' = null then None
+      elif   s'.Length > (int upper) then None
       elif s'.Length < (int lower) then None
       else Some s'
       @@>

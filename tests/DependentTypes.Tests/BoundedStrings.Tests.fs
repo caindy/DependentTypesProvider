@@ -1,18 +1,24 @@
 module BoundedStrings.Tests
 #nowarn "59"
 
+open System
 open FSharp.DependentTyping
 open FSharp.DependentTypes.Strings
 open NUnit.Framework
 
 [<Literal>]
-let len = 5us
+let len = 5
 
 type F = FixedLengthString<Length=len>
-type B = BoundedString<Lower=1us, Upper=len>
+type B = BoundedString<Lower=1, Upper=len>
 
 let mkStr n = new System.String([| for i in 1..(int n) do yield 's' |])
 let alterLength s = s + "s"
+
+[<Test>]
+let ``null strings should fail`` () =
+  Assert.Throws<ArgumentNullException>(fun () -> printfn "%s" <| upcast F(null)) |> ignore
+  Assert.Throws<ArgumentNullException>(fun () -> printfn "%s" <| upcast B(null)) |> ignore
 
 [<Test>]
 let ``right length should fit in fixed length string`` () =
@@ -51,24 +57,32 @@ let ``factory method should return Some for correct length`` () =
   let b' = b |> Option.get
   Assert.That(b', Is.InstanceOf<B>())
 
-type B2 = BoundedString<Lower=10us, Upper=20us>
+[<Test>]
+let ``factory method should fail for null`` () =
+  let b = B.TryCreate(null)
+  Assert.IsTrue(b.IsNone)
+  let f = F.TryCreate(null)
+  Assert.IsTrue(f.IsNone)
+
+type B2 = BoundedString<Lower=10, Upper=20>
 [<Test>]
 let ``smaller than lower bound should fail`` () =
-  Assert.Throws(fun () -> printfn "%s" <| upcast B2(mkStr 9us))
+  Assert.Throws(fun () -> printfn "%s" <| upcast B2(mkStr 9))
   |> ignore
 
 [<Test>]
 let ``factory method returns None when violating upper or lower bound`` () =
-  let s1 = B2.TryCreate(mkStr 9us) // too short
+  let s1 = B2.TryCreate(mkStr 9) // too short
   Assert.IsTrue(s1.IsNone)
-  let s2 = B2.TryCreate(mkStr 21us) // too long
+  let s2 = B2.TryCreate(mkStr 21) // too long
   Assert.IsTrue(s2.IsNone)
 
-type private Str5 = FixedLengthString<Length=5us>
+
+type private Str5 = FixedLengthString<Length=5>
 type Foo = private Bar of Str5
   with override x.ToString () : string = let (Bar s) = x in upcast s
 
 [<Test>]
 let ``private DUs should work with these`` () =
-  let s = Bar (Str5(mkStr 5us))
+  let s = Bar (Str5(mkStr 5))
   Assert.IsNotNull(s.ToString())

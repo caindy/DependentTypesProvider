@@ -20,3 +20,11 @@ let ``cannot create a bounded int32 greater than the specified range`` () =
 [<Test>]
 let ``bounded int should have upper and lower bound properties`` () =
   Assert.IsNotNullOrEmpty(sprintf "Upper %d and lower %d" (I.MaxValue) (I.MinValue))
+
+type UInt = BoundedUInt32<Lower=10ul, Upper=20ul>
+[<Test>]
+let ``can create a bounded uint32 in the specified range`` () =
+  let i = UInt(18ul)
+  Assert.That(box i, Is.InstanceOf<uint32>())
+  Assert.AreEqual(18, i)
+
