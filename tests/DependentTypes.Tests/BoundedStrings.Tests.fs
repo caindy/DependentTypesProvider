@@ -1,7 +1,8 @@
 module BoundedStrings.Tests
 #nowarn "59"
 
-open FSharp.DependentTypes
+open FSharp.DependentTyping
+open FSharp.DependentTypes.Strings
 open NUnit.Framework
 
 [<Literal>]
@@ -45,7 +46,10 @@ let ``string longer than upper bound shouldn't fit`` () =
 
 [<Test>]
 let ``factory method should return Some for correct length`` () =
-  Assert.IsTrue(B.TryCreate(mkStr len).IsSome)
+  let b = B.TryCreate(mkStr len)
+  Assert.IsTrue(b.IsSome)
+  let b' = b |> Option.get
+  Assert.That(b', Is.InstanceOf<B>())
 
 type B2 = BoundedString<Lower=10us, Upper=20us>
 [<Test>]

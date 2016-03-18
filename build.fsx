@@ -28,11 +28,11 @@ open SourceLink
 
 // The name of the project
 // (used by attributes in AssemblyInfo, name of a NuGet package and directory in 'src')
-let project = "BoundedStrings"
+let project = "FSharp.DependentTypes"
 
 // Short summary of the project
 // (used as description in AssemblyInfo and as a short summary for NuGet package)
-let summary = "type provider for bounded strings"
+let summary = "type provider for dependent types"
 
 // Longer description of the project
 // (used as a description for NuGet package; line breaks are automatically cleaned up)
@@ -45,7 +45,7 @@ let authors = [ "Christopher Atkins" ]
 let tags = ""
 
 // File system information
-let solutionFile  = "BoundedStrings.sln"
+let solutionFile  = "DependentTypes.sln"
 
 // Pattern specifying assemblies to be tested using NUnit
 let testAssemblies = "tests/**/bin/Release/*Tests*.dll"
@@ -56,7 +56,7 @@ let gitOwner = "caindy"
 let gitHome = "https://github.com/" + gitOwner
 
 // The name of the project on GitHub
-let gitName = "BoundedStrings.fs"
+let gitName = "DependentTypes"
 
 // The url for the raw files hosted
 let gitRaw = environVarOrDefault "gitRaw" "https://raw.github.com/caindy"

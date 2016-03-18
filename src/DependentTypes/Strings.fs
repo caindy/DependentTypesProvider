@@ -7,9 +7,9 @@ open ProviderImplementation.ProvidedTypes
 open FSharp.Quotations
 
 [<TypeProvider>]
-type DependentTypesProvider (_cfg) as tp = // TODO implement cross compiling
+type Strings (_cfg) as tp = // TODO implement cross compiling
   inherit TypeProviderForNamespaces ()
-  let ns        = "FSharp.DependentTypes"
+  let ns        = "FSharp.DependentTypes.Strings"
   let asm       = Assembly.GetExecutingAssembly()
   let fixedLenStr = new ProvidedTypeDefinition(asm, ns, "FixedLengthString", Some typeof<obj>)
 
@@ -85,5 +85,5 @@ type DependentTypesProvider (_cfg) as tp = // TODO implement cross compiling
     boundedStr .DefineStaticParameters([lowerBound; upperBound], createBounded)
     tp.AddNamespace(ns, [fixedLenStr; boundedStr])
 
-[<assembly:TypeProviderAssembly>]
+[<assembly: TypeProviderAssembly()>]
 do ()
