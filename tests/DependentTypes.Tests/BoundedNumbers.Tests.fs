@@ -28,3 +28,14 @@ let ``can create a bounded uint32 in the specified range`` () =
   Assert.That(box i, Is.InstanceOf<uint32>())
   Assert.AreEqual(18, i)
 
+type UInt16 = BoundedUInt16<Lower=10us, Upper=20us>
+type Byte   = BoundedByte<Lower=10uy, Upper=20uy>
+[<Test>]
+let ``can create various bounded numbers in the specified range`` () =
+  let i = UInt16(16us)
+  Assert.That(box i, Is.InstanceOf<uint16>())
+  Assert.AreEqual(16, i)
+  let b = Byte(16uy)
+  Assert.That(box b, Is.InstanceOf<byte>())
+  Assert.AreEqual(16, b)
+

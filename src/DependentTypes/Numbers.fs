@@ -7,8 +7,7 @@ open ProviderImplementation
 open ProviderImplementation.ProvidedTypes
 open FSharp.Quotations
 
-[<AutoOpen>]
-module Bounds =
+module BoundedNums =
   let inline createdBoundedNum< ^n when ^n : comparison> asm ns (tyName : string) (bounds : obj array) =
     let lower = (bounds.[0] : obj) :?> ^n
     let upper = (bounds.[1] : obj) :?> ^n
@@ -49,16 +48,32 @@ module Bounds =
   let upperBoundParam<'t> ()              = new ProvidedStaticParameter("Upper", typeof<'t>)
   let lowerBoundParam<'t> (v : 't option) = new ProvidedStaticParameter("Lower", typeof<'t>,
                                                                         parameterDefaultValue = defaultArg v (Unchecked.defaultof<'t>))
+  let boundedNum<'t> create asm ns (defaultLowerBound : 't option)=
+    let name = sprintf "Bounded%s" typeof<'t>.Name
+    let b = new ProvidedTypeDefinition(asm, ns, name,  Some typeof<obj>)
+    b.DefineStaticParameters([lowerBoundParam defaultLowerBound; upperBoundParam<'t> ()], create asm ns)
+    b
+  let ns          = "FSharp.DependentTypes.Numbers"
+  let asm         = Assembly.GetExecutingAssembly()
+  let inline create< ^t when ^t : comparison> () =
+    boundedNum< ^t> createdBoundedNum< ^t> asm ns None
+  let types = [
+    create<sbyte> ()
+    create<byte> ()
+    create<int16> ()
+    create<uint16> ()
+    create<int> ()
+    create<uint32> ()
+    create<unativeint> ()
+    create<int64> ()
+    create<uint64> ()
+    create<single> ()
+    create<double> ()
+    create<bigint> ()
+    create<decimal> () ]
 
 [<TypeProvider>]
 type Numbers (_cfg) as tp =
   inherit TypeProviderForNamespaces ()
-  let ns          = "FSharp.DependentTypes.Numbers"
-  let asm         = Assembly.GetExecutingAssembly()
-  let boundedInt  = new ProvidedTypeDefinition(asm, ns, "BoundedInt32",  Some typeof<obj>)
-  let boundedUInt = new ProvidedTypeDefinition(asm, ns, "BoundedUInt32", Some typeof<obj>)
-
   do
-    boundedInt .DefineStaticParameters([lowerBoundParam<int>    None; upperBoundParam<int>    ()], (createdBoundedNum<int>    asm ns))
-    boundedUInt.DefineStaticParameters([lowerBoundParam<uint32> None; upperBoundParam<uint32> ()], (createdBoundedNum<uint32> asm ns))
-    tp.AddNamespace(ns, [boundedInt; boundedUInt])
+    tp.AddNamespace("FSharp.DependentTypes.Numbers", BoundedNums.types)
