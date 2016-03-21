@@ -1,5 +1,5 @@
 type project
-id FSharp.DependentTypes
+id FSharp.DependentTypesProvider
 owners
     Christopher Atkins
 authors 
