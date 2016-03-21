@@ -2,11 +2,11 @@
 open System.Reflection
 
 [<assembly: AssemblyTitleAttribute("DependentTypes")>]
-[<assembly: AssemblyProductAttribute("FSharp.DependentTypes")>]
-[<assembly: AssemblyDescriptionAttribute("type provider for dependent types")>]
-[<assembly: AssemblyVersionAttribute("1.0")>]
-[<assembly: AssemblyFileVersionAttribute("1.0")>]
+[<assembly: AssemblyProductAttribute("DependentTypes")>]
+[<assembly: AssemblyDescriptionAttribute("An F# type provider that provides dependent string and numeric types.")>]
+[<assembly: AssemblyVersionAttribute("0.0.1")>]
+[<assembly: AssemblyFileVersionAttribute("0.0.1")>]
 do ()
 
 module internal AssemblyVersionInformation =
-    let [<Literal>] Version = "1.0"
+    let [<Literal>] Version = "0.0.1"
