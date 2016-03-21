@@ -1,5 +1,5 @@
 (*** hide ***)
-// This block of code is omitted in the generated HTML documentation. Use 
+// This block of code is omitted in the generated HTML documentation. Use
 // it to define helpers that you do not want to show in the documentation.
 #I "../../bin"
 
@@ -7,14 +7,20 @@
 DependentTypes
 ======================
 
-Documentation
+Dependent types are types that depend on inhabitants of other types.
+As an example, consider a type that defines all the strings less than a particular
+length. This type would depend on the specified length, which is itself an
+instance of another type (e.g. int). 
 
+This library allows us to encode those rules about what constitutes a valid
+subset of a primitive type into a specific type in your domain. Using this library,
+you can create such a constrained string (i.e. BoundedString), as well as constrained numeric types.
 <div class="row">
   <div class="span1"></div>
   <div class="span6">
     <div class="well well-small" id="nuget">
-      The DependentTypes library can be <a href="https://nuget.org/packages/DependentTypes">installed from NuGet</a>:
-      <pre>PM> Install-Package DependentTypes</pre>
+      The DependentTypes library can be <a href="https://nuget.org/packages/FSharp.DependentTypes">installed from NuGet</a>:
+      <pre>PM> Install-Package FSharp.DependentTypes</pre>
     </div>
   </div>
   <div class="span1"></div>
@@ -23,9 +29,9 @@ Documentation
 Example
 -------
 
-This example demonstrates using a function defined in this sample library.
-
+A simple example of constraining a string and a numeric type:
 *)
+
 #r "DependentTypes.dll"
 open FSharp.DependentTyping
 
@@ -36,32 +42,24 @@ open FSharp.DependentTypes.Numbers
 type VolumeLevel = BoundedByte<11> // lower bound defaults to 0
 
 (**
-Some more info
 
 Samples & documentation
 -----------------------
 
-The library comes with comprehensible documentation. 
-It can include tutorials automatically generated from `*.fsx` files in [the content folder][content]. 
-The API reference is automatically generated from Markdown comments in the library implementation.
-
  * [Tutorial](tutorial.html) contains a further explanation of this sample library.
 
- * [API Reference](reference/index.html) contains automatically generated documentation for all types, modules
-   and functions in the library. This includes additional brief samples on using most of the
-   functions.
- 
+ * TODO a fully worked domain model
+
 Contributing and copyright
 --------------------------
 
-The project is hosted on [GitHub][gh] where you can [report issues][issues], fork 
-the project and submit pull requests. If you're adding a new public API, please also 
-consider adding [samples][content] that can be turned into a documentation. You might
-also want to read the [library design notes][readme] to understand how it works.
+The project is hosted on [GitHub][gh] where you can [report issues][issues], fork
+the project and submit pull requests. If you're adding a new public API, please also
+consider adding [samples][content] that can be turned into documentation.
 
-The library is available under Public Domain license, which allows modification and 
-redistribution for both commercial and non-commercial purposes. For more information see the 
-[License file][license] in the GitHub repository. 
+The library is available under MIT license, which allows modification and
+redistribution for both commercial and non-commercial purposes. For more information see the
+[License file][license] in the GitHub repository.
 
   [content]: https://github.com/caindy/DependentTypesProvider/tree/master/docs/content
   [gh]: https://github.com/caindy/DependentTypesProvider

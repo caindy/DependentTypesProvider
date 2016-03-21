@@ -7,11 +7,6 @@
 Dependent Types via an F# Type Provider
 =====================================================
 
-Dependent types are types that depend on inhabitants of other types.
-As an example, consider a type that defines all the strings of a particular
-length. This type would depend on the specified length, which is itself an
-instance of another type (e.g. int).
-
 Let's look at the case of a Product Description from some hypothetical domain.
 Typically you'd make a decision on what constitutes a valid Product Description,
 then write some static validation functions that are utilized when checking a
