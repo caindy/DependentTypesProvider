@@ -17,11 +17,11 @@ let githubLink = "http://github.com/caindy/DependentTypesProvider"
 
 // Specify more information about your project
 let info =
-  [ "project-name", "DependentTypesProvider"
+  [ "project-name", "FSharp.DependentTypesProvider"
     "project-author", "Christopher Atkins"
     "project-summary", "An F# type provider that provides dependent string and numeric types"
     "project-github", githubLink
-    "project-nuget", "http://nuget.org/packages/DependentTypesProvider" ]
+    "project-nuget", "http://nuget.org/packages/FSharp.DependentTypesProvider" ]
 
 // --------------------------------------------------------------------------------------
 // For typical project, no changes are needed below

@@ -10,7 +10,7 @@ DependentTypes
 Dependent types are types that depend on inhabitants of other types.
 As an example, consider a type that defines all the strings less than a particular
 length. This type would depend on the specified length, which is itself an
-instance of another type (e.g. int). 
+instance of another type (e.g. int).
 
 This library allows us to encode those rules about what constitutes a valid
 subset of a primitive type into a specific type in your domain. Using this library,

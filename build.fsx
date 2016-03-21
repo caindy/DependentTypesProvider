@@ -28,21 +28,24 @@ open SourceLink
 
 // The name of the project
 // (used by attributes in AssemblyInfo, name of a NuGet package and directory in 'src')
-let project = "FSharp.DependentTypes"
+let project = "DependentTypesProvider"
 
 // Short summary of the project
 // (used as description in AssemblyInfo and as a short summary for NuGet package)
-let summary = "type provider for dependent types"
+let summary = "An F# type provider that provides dependent string and numeric types."
 
 // Longer description of the project
 // (used as a description for NuGet package; line breaks are automatically cleaned up)
-let description = "Project has no description; update build.fsx"
+let description = """This is a library for F# developers; it contains two F# type providers. The FSharp.DependentTypes.Strings namespace
+  provides types for representing dependent strings, for example strings that must be within a particular range of lengths
+  (BoundedString). The FSharp.DependentTypes.Numbers namespace provides dependent types for the numeric primitives in .NET,
+  e.g. BoundedInt."""
 
 // List of author names (for NuGet package)
 let authors = [ "Christopher Atkins" ]
 
 // Tags for your project (for NuGet package)
-let tags = ""
+let tags = "F# fsharp typeprovider"
 
 // File system information
 let solutionFile  = "DependentTypes.sln"
@@ -53,10 +56,10 @@ let testAssemblies = "tests/**/bin/Release/*Tests*.dll"
 // Git configuration (used for publishing documentation in gh-pages branch)
 // The profile where the project is posted
 let gitOwner = "caindy"
-let gitHome = "https://github.com/" + gitOwner
+let gitHome = "caindy@github.com:caindy"
 
 // The name of the project on GitHub
-let gitName = "DependentTypes"
+let gitName = "DependentTypesProvider"
 
 // The url for the raw files hosted
 let gitRaw = environVarOrDefault "gitRaw" "https://raw.github.com/caindy"
