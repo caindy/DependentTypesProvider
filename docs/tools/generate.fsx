@@ -11,17 +11,17 @@
 // (This is the original behaviour of ProjectScaffold prior to multi project support)
 let referenceBinaries = []
 // Web site location for the generated documentation
-let website = "/BoundedStrings"
+let website = "/DependentTypesProvider"
 
-let githubLink = "http://github.com/caindy/BoundedStrings.fs"
+let githubLink = "http://github.com/caindy/DependentTypesProvider"
 
 // Specify more information about your project
 let info =
-  [ "project-name", "BoundedStrings"
+  [ "project-name", "DependentTypesProvider"
     "project-author", "Christopher Atkins"
-    "project-summary", "type provider for bounded strings"
+    "project-summary", "An F# type provider that provides dependent string and numeric types"
     "project-github", githubLink
-    "project-nuget", "http://nuget.org/packages/BoundedStrings" ]
+    "project-nuget", "http://nuget.org/packages/DependentTypesProvider" ]
 
 // --------------------------------------------------------------------------------------
 // For typical project, no changes are needed below

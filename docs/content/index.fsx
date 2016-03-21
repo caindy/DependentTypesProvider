@@ -4,7 +4,7 @@
 #I "../../bin"
 
 (**
-BoundedStrings
+DependentTypes
 ======================
 
 Documentation
@@ -13,8 +13,8 @@ Documentation
   <div class="span1"></div>
   <div class="span6">
     <div class="well well-small" id="nuget">
-      The BoundedStrings library can be <a href="https://nuget.org/packages/BoundedStrings">installed from NuGet</a>:
-      <pre>PM> Install-Package BoundedStrings</pre>
+      The DependentTypes library can be <a href="https://nuget.org/packages/DependentTypes">installed from NuGet</a>:
+      <pre>PM> Install-Package DependentTypes</pre>
     </div>
   </div>
   <div class="span1"></div>
@@ -26,10 +26,14 @@ Example
 This example demonstrates using a function defined in this sample library.
 
 *)
-#r "BoundedStrings.dll"
-open BoundedStrings
+#r "DependentTypes.dll"
+open FSharp.DependentTyping
 
-printfn "hello = %i" <| Library.hello 0
+open FSharp.DependentTypes.Strings
+type ProductDescription = BoundedString<10, 2000>
+
+open FSharp.DependentTypes.Numbers
+type VolumeLevel = BoundedByte<11> // lower bound defaults to 0
 
 (**
 Some more info
@@ -59,9 +63,9 @@ The library is available under Public Domain license, which allows modification 
 redistribution for both commercial and non-commercial purposes. For more information see the 
 [License file][license] in the GitHub repository. 
 
-  [content]: https://github.com/fsprojects/BoundedStrings/tree/master/docs/content
-  [gh]: https://github.com/fsprojects/BoundedStrings
-  [issues]: https://github.com/fsprojects/BoundedStrings/issues
-  [readme]: https://github.com/fsprojects/BoundedStrings/blob/master/README.md
-  [license]: https://github.com/fsprojects/BoundedStrings/blob/master/LICENSE.txt
+  [content]: https://github.com/caindy/DependentTypesProvider/tree/master/docs/content
+  [gh]: https://github.com/caindy/DependentTypesProvider
+  [issues]: https://github.com/caindy/DependentTypesProvider/issues
+  [readme]: https://github.com/caindy/DependentTypesProvider/blob/master/README.md
+  [license]: https://github.com/caindy/DependentTypesProvider/blob/master/LICENSE.txt
 *)

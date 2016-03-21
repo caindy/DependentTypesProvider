@@ -7,7 +7,10 @@ for certain primitives (string, number types).
 Some code:
 
 ```fsharp
+open FSharp.DependentTyping
+
 // let's define our product description to be 10-2000 characters
+open FSharp.DependentTypes.Strings
 type ProductDescription = BoundedString<10, 2000>
 
 // factory methods available for all types
@@ -25,6 +28,7 @@ let (s  : string) = upcast b // warning "String has no proper subtypes"
 Assert.AreEqual("CAIndy", b) // yup!
 
 // It goes to 11
+open FSharp.DependentTypes.Numbers
 type VolumeLevel = BoundedByte<11> // lower bound defaults to 0
 
 // all number types are supported
@@ -37,9 +41,9 @@ type DistanceToSunKm = BoundedDouble<PerihelionKm,AphelionKm>
 #Discussion
 
 The constructor and factory method are both here because sometimes you trust
-your inputs and sometimes you don't. Ideally using this approach wouldn't incur
-much more overhead than using a single-case discriminated union (or less). I
-haven't tested C# interop.
+your inputs and sometimes you don't. This approach should incur less overhead
+than using a single-case discriminated union, as the type is erased to string
+(or numeric type).
 
 ## Request for Feedback
 
@@ -53,14 +57,14 @@ Is there a feature here you'd like to see? Let me know!
 # Roadmap
 That's all for now. Here's the plan thus far:
 
-[ ] `PatternString` accepting RegEx string type parameter
+- [ ] `PatternString` accepting RegEx string type parameter
 
-[ ] Units of measure for bounded numbers
+- [ ] Units of measure for bounded numbers
 
-[ ] NuGet love
+- [ ] NuGet love
 
-[ ] Cross-targetting
+- [ ] Cross-targetting
 
-[ ] C# Interop tests
+- [ ] C# Interop tests
 
 Copyright 2016 Christopher Atkins

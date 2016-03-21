@@ -4,20 +4,23 @@ owners
 authors 
     Christopher Atkins
 projectUrl
-    http://github.com/caindy/BoundedStrings
+    http://github.com/caindy/DependentTypesProvider
 iconUrl
-    https://raw.githubusercontent.com/caindy/BoundedStrings/master/docs/files/img/logo.png
+    https://raw.githubusercontent.com/caindy/DependentTypesProvider/master/docs/files/img/logo.png
 licenseUrl
-    http://github.com/caindy/BoundedStrings/blob/master/LICENSE.txt
+    http://github.com/caindy/DependentTypesProvider/blob/master/LICENSE.txt
 requireLicenseAcceptance
     false
 copyright
-    Copyright 2015
+    Copyright 2016
 tags
-    
+    F# fsharp typeprovider
 summary
-    type provider for bounded strings
+    An F# type provider that provides dependent string and numeric types.
 description
-    Description not set
+    This is a library for F# developers; it contains two F# type providers. The FSharp.DependentTypes.Strings namespace
+    provides types for representing dependent strings, for example strings that must be within a particular range of lengths
+    (BoundedString). The FSharp.DependentTypes.Numbers namespace provides dependent types for the numeric primitives in .NET,
+    e.g. BoundedInt.
 
 

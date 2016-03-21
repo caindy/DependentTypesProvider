@@ -41,8 +41,10 @@ let ``factory method should return None for wrong length`` () =
 
 [<Test>]
 let ``smaller equal to upper bound should fit`` () =
-  let s = B(mkStr len)
-  Assert.IsNotNullOrEmpty(upcast s)
+  let s = mkStr len
+  let b = B(s)
+  Assert.IsNotNullOrEmpty(upcast b)
+  Assert.AreEqual(s, b)
 
 [<Test>]
 let ``string longer than upper bound shouldn't fit`` () =
