@@ -85,8 +85,8 @@ to create some new types for our contrived example.
 open FSharp.DependentTypes.Numbers
 
 type LineItem = { Product : Product; UnitPrice : ProductPrice; Quantity : AllowedQuantity }
-and ProductPrice = BoundedDecimal(0.01m, 999.99m)
-and AllowedQuantity = BoundedByte(1uy, 99uy)
+and ProductPrice = BoundedDecimal<0.01m, 999.99m>
+and AllowedQuantity = BoundedByte<1uy, 99uy>
 
 (**
 Validation
