@@ -1,7 +1,0 @@
-group Main
-  File: AssemblyReader.fs
-  File: AssemblyReaderReflection.fs
-  File: ProvidedTypes.fsi
-  File: ProvidedTypes.fs
-  File: ProvidedTypesContext.fs
-  File: ProvidedTypesTesting.fs
