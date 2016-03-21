@@ -59,27 +59,27 @@
   -->
   <Import Project="..\..\.paket\paket.targets" />
   <ItemGroup>
-    <Content Include="..\..\paket-files\fsprojects\FSharp.TypeProviders.StarterPack\src\ProvidedTypes.fsi">
+    <Content Include="..\..\paket-files\caindy\FSharp.TypeProviders.StarterPack\src\ProvidedTypes.fsi">
       <Paket>True</Paket>
       <Link>paket-files/ProvidedTypes.fsi</Link>
     </Content>
-    <Compile Include="..\..\paket-files\fsprojects\FSharp.TypeProviders.StarterPack\src\AssemblyReader.fs">
+    <Compile Include="..\..\paket-files\caindy\FSharp.TypeProviders.StarterPack\src\AssemblyReader.fs">
       <Paket>True</Paket>
       <Link>paket-files/AssemblyReader.fs</Link>
     </Compile>
-    <Compile Include="..\..\paket-files\fsprojects\FSharp.TypeProviders.StarterPack\src\AssemblyReaderReflection.fs">
+    <Compile Include="..\..\paket-files\caindy\FSharp.TypeProviders.StarterPack\src\AssemblyReaderReflection.fs">
       <Paket>True</Paket>
       <Link>paket-files/AssemblyReaderReflection.fs</Link>
     </Compile>
-    <Compile Include="..\..\paket-files\fsprojects\FSharp.TypeProviders.StarterPack\src\ProvidedTypes.fs">
+    <Compile Include="..\..\paket-files\caindy\FSharp.TypeProviders.StarterPack\src\ProvidedTypes.fs">
       <Paket>True</Paket>
       <Link>paket-files/ProvidedTypes.fs</Link>
     </Compile>
-    <Compile Include="..\..\paket-files\fsprojects\FSharp.TypeProviders.StarterPack\src\ProvidedTypesContext.fs">
+    <Compile Include="..\..\paket-files\caindy\FSharp.TypeProviders.StarterPack\src\ProvidedTypesContext.fs">
       <Paket>True</Paket>
       <Link>paket-files/ProvidedTypesContext.fs</Link>
     </Compile>
-    <Compile Include="..\..\paket-files\fsprojects\FSharp.TypeProviders.StarterPack\src\ProvidedTypesTesting.fs">
+    <Compile Include="..\..\paket-files\caindy\FSharp.TypeProviders.StarterPack\src\ProvidedTypesTesting.fs">
       <Paket>True</Paket>
       <Link>paket-files/ProvidedTypesTesting.fs</Link>
     </Compile>
