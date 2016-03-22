@@ -39,7 +39,7 @@ let summary = "An F# type provider that provides dependent string and numeric ty
 let description = """This is a library for F# developers; it contains two F# type providers. The FSharp.DependentTypes.Strings namespace
   provides types for representing dependent strings, for example strings that must be within a particular range of lengths
   (BoundedString). The FSharp.DependentTypes.Numbers namespace provides dependent types for the numeric primitives in .NET,
-  e.g. BoundedInt."""
+  e.g. BoundedInt32."""
 
 // List of author names (for NuGet package)
 let authors = [ "Christopher Atkins" ]
